@@ -1,0 +1,32 @@
+services:
+
+  ui:
+    build:
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./services/ui:/app
+      - dev-node-cache:/root
+
+  backend:
+    build:
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./services/backend:/app
+      - dev-node-cache:/root
+    ports:
+      - "9229:9229" # debugger
+
+  certbot:
+    restart: "no"
+    entrypoint: ["echo", "Service disabled"]
+    deploy:
+      replicas: 0
+    environment:
+      - CERT_MODE=staging
+
+  postgres:
+    ports:
+      - "5432:5432"
+
+volumes:
+  dev-node-cache:
